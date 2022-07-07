@@ -3,7 +3,7 @@
   <div class="block_header">
     <span>{{node.title}}</span>
   </div>
-  <div class="block_body">
+  <div class="block_body" ref="body">
     <div class="in_dots_list">
       <div v-if="node.hasParent" class="in_connect">
         <div class="dot"></div>in
@@ -52,11 +52,10 @@ export default {
      // }
     },
     moveNode(moveX,moveY){
-      if(this.stableNode()){
+     // if(this.stableNode()){
       this.marginLeft=moveX-this.shiftX
       this.marginTop=moveY-this.shiftY
-    }
-     // console.log(this.canvas.getBoundingClientRect().bottom , this.$refs.block.getBoundingClientRect().bottom )
+//    }
     },
     onMouseMove(event){
      this.moveNode(event.pageX, event.pageY);
@@ -66,9 +65,9 @@ export default {
      for (let i =0;i<children;i++){
        tracksOut.push(track+'.'+i);
      }
-      if(this.stableNode()){
-        this.$emit('moveTrack', event, track, this.shiftX - 20, this.shiftY - 76, tracksOut);
-      }
+    //  if(this.stableNode()){
+        this.$emit('moveTrack', event, track, this.shiftX - 20, this.shiftY - 76, tracksOut,);
+    //  }
     },
     stableNode(){
       let svgSize=this.canvas.getBoundingClientRect();

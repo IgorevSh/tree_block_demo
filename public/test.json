@@ -6,7 +6,8 @@
         {
           "nodes":null,
           "title":"Node 1.1.1"
-        }],
+        }
+        ],
         "title":"Node 1.1"
       },
       {
@@ -22,7 +23,7 @@
         ],
         "title":"Node 1.2"
       }
-    ],
+        ],
     "title":"Node 1"
   }
 ]

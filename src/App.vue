@@ -2,7 +2,7 @@
   <div>
     <svg
         class="cnv_tracks"
-    ref="canvas">
+    ref="canvas" >
       <path v-for="track in tracksArray" :key="track.id"
             :d="`M ${track.path.startX},${track.path.startY}
              C ${track.path.endX} ${track.path.startY},${track.path.startX} ${track.path.endY},${track.path.endX} ${track.path.endY},`"
@@ -14,17 +14,13 @@
         :node ="node"
         :canvas="$refs.canvas"
         @move-track="moveTrack"
-        @moveBG="moveBG"
     />
-    <!--<div v-for="bg in bgArray" :key="bg.id" :style="{left:bg.left+'px',top:bg.top+'px'}"  class="underblock">
-      {{bg.trackId}}
-    </div>-->
   </div>
 </template>
 
 <script>
 import BlockItem from './components/BlockItem.vue'
-import test from '../public/test.json'
+import axios from 'axios'
 
 export default {
   name: 'App',
@@ -36,20 +32,27 @@ export default {
       nodesArray:[],
       tracksArray:[],
      // bgArray: {},
+      test:[]
     }
   },
-
   mounted(){
-    this.getNodes(test,1,100,200);
+    axios.get('https://functions.yandexcloud.net/d4e7argpi2fe7epuh65b').then(response=>{
+      this.test=response.data
+      this.getNodes(this.test,1,100,200);
+    })
   },
   methods:{
     getNodes(nodeList,indexOfZ,paddingX=0,paddingY=0,brothers=0,id='0'){
       nodeList.forEach((itm,index)=>{
         let newId=id;
         let top =paddingY-(200)*(index)+(brothers+1*150)*0.5
+        let children=itm.nodes?.length||0
+        if(children>10){
+          children=10;
+        }
         this.nodesArray.push({
           title:itm.title,
-          children:itm.nodes?.length||0,
+          children:children,
           zIndex:indexOfZ,
           paddingLeft:paddingX,
           paddingTop:top,
@@ -89,14 +92,6 @@ export default {
         })
       }
     },
- /*
-    moveBG(id,top,left){
-      console.log(id,this.$refs[`bg-${id}`])
-    this.bgArray[`bg-${id}`].top=top
-    this.bgArray[`bg-${id}`].left=left
-    }
-   */
-
   }
 }
 </script>
@@ -108,18 +103,9 @@ export default {
 }
 .cnv_tracks{
   position: absolute;
-  height: 100vh;
-  width:100vw;
-  border: 2px solid red;
+  height: 1000px;
+  width:1000px;
+ /* border: 2px solid red;*/
   z-index: 0;
-}
-.underblock{
-  height: 128px;
-  width: 250px;
-  background-color: white;
-  position: absolute;
-  z-index: -1;
-  border-radius:5px 5px 0 0;
-  box-shadow: 0 2px 10px -5px black;
 }
 </style>
