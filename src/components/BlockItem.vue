@@ -1,7 +1,7 @@
 <template>
 <div ref="block" @mousedown="mouseDown" v-on:mouseup="eventRemover" class="block_wrapper" :style="{left:marginLeft+'px',top:marginTop+'px',zIndex:node.zIndex,}">
   <div class="block_header">
-    <span>{{node.trackId}}</span>
+    <span>{{node.title}}</span>
   </div>
   <div class="block_body">
     <div class="in_dots_list">
