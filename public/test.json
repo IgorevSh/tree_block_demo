@@ -1,0 +1,28 @@
+[
+  {
+    "nodes": [
+      {
+        "nodes":[
+        {
+          "nodes":null,
+          "title":"Node 1.1.1"
+        }],
+        "title":"Node 1.1"
+      },
+      {
+        "nodes":[
+          {
+            "nodes":null,
+            "title":"Node 1.2.1"
+          },
+          {
+            "nodes":null,
+            "title":"Node 1.2.2"
+          }
+        ],
+        "title":"Node 1.2"
+      }
+    ],
+    "title":"Node 1"
+  }
+]
