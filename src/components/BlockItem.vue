@@ -1,7 +1,7 @@
 <template>
 <div ref="block" @mousedown="mouseDown" v-on:mouseup="eventRemover" class="block_wrapper" :style="{left:marginLeft+'px',top:marginTop+'px',zIndex:node.zIndex,}">
   <div class="block_header">
-    <span>{{node.title}}</span>
+    <span>{{node.trackId}}</span>
   </div>
   <div class="block_body" ref="body">
     <div class="in_dots_list">
@@ -66,7 +66,7 @@ export default {
        tracksOut.push(track+'.'+i);
      }
     //  if(this.stableNode()){
-        this.$emit('moveTrack', event, track, this.shiftX - 20, this.shiftY - 76, tracksOut,);
+        this.$emit('moveTrack', event, track, this.shiftX - 20, this.shiftY - 76, tracksOut,this.$refs.body.offsetHeight);
     //  }
     },
     stableNode(){
