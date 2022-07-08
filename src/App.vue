@@ -39,7 +39,7 @@ export default {
   mounted(){
     axios.get('https://functions.yandexcloud.net/d4e7argpi2fe7epuh65b').then(response=>{
       this.test=response.data
-      this.getNodes(this.test,1,100,1000);
+      this.getNodes(this.test,1,100,200);
     })
   },
   methods:{
@@ -107,8 +107,8 @@ export default {
 }
 .cnv_tracks{
   position: absolute;
-  height: 5000px;
-  width:5000px;
+  height: 100vh;
+  width:100vw;
  /* border: 2px solid red;*/
   z-index: 0;
 }
