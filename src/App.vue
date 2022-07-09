@@ -32,6 +32,7 @@ export default {
     return{
       nodesArray:[],
       tracksArray:[],
+      limit:2,
      // bgArray: {},
       test:[]
     }
@@ -39,19 +40,24 @@ export default {
   mounted(){
     axios.get('https://functions.yandexcloud.net/d4e7argpi2fe7epuh65b').then(response=>{
       this.test=response.data
-      this.getNodes(this.test,1,100,200);
+      this.getNodes( this.test,1,100,200);
     })
   },
   methods:{
-    getNodes(nodeList,indexOfZ,paddingX=0,paddingY=0,brothers=0,id='0'){
+    getNodes(nodeList,indexOfZ,paddingX=0,paddingY=0,brothers=1,id='0'){
+      let lineShift=0;
+      let gapShift=0;
       nodeList.forEach((itm,index)=>{
-        if(index<4) {
+        let children = itm.nodes?.length || 0
+        if(children>this.limit){
+          children=this.limit
+        }
+        if(children>5){
+          lineShift += (children - 5) * 18.4
+        }
+        if(index<(this.limit)) {
           let newId = id;
-          let top = paddingY - (200) * (index) + (brothers + 1 * 150) * 0.5
-          let children = itm.nodes?.length || 0
-            if(children>4){
-              children=4
-            }
+          let top = paddingY - (200) * (index) + 150 * 0.5-lineShift
           this.nodesArray.push({
             title: itm.title,
             children: children,
@@ -65,35 +71,47 @@ export default {
           // this.bgArray[`bg-${indexOfZ>1?newId+'.'+index:'0'}`]={id:`bg-${indexOfZ>1?newId+'.'+index:'0'}`,top:top,left:paddingX};
           if (indexOfZ > 1) {
             newId = newId + '.' + index;
+            if(brothers<=5){
+              gapShift=(5-(brothers))*18.4/2
+            }
+            //console.log(lineShift,newId,children)
             this.tracksArray.push({
               id: newId,
               path: {
                 startX: paddingX - 60,
-                startY: paddingY + 80 - 18 * index + (brothers + 1) * 2 * (brothers + 1) - 3,
+                startY:paddingY+20+(92)-index*18.4-gapShift,//-1.05*(shift)+paddingY-18*index+(brothers + 1)*(2*(brothers + 1)+0.5);
                 endX: paddingX + 25,
-                endY: top + 75,
+                endY:top+75+(lineShift*0.5),
               },
             })
           }
           if (itm.nodes) {
-            this.getNodes(itm.nodes, ++indexOfZ, paddingX + 300, top, itm.nodes?.length - 1 || 0, newId);
+            this.getNodes(itm.nodes, ++indexOfZ, paddingX + 300, top+lineShift, children, newId);
           }
         }
       })
     },
-    moveTrack(e,track,shiftx,shifty,outTracks,blockHeight){
-      console.log(blockHeight)
+    moveTrack(e,track,shiftx,shifty,outTracks,blockHeight,tracksInfo){
       let target=this.tracksArray.find((itm)=>{return itm.id==track});
       if(target) {
         target.path.endX = e.pageX - shiftx;
-        target.path.endY = e.pageY - shifty+(blockHeight-100);
+        target.path.endY = e.pageY - shifty+75+0.5*(blockHeight-92)+2;
       }
-      if(outTracks){
-        outTracks.forEach((itmTrack,indx)=>{
-          let target=this.tracksArray.find((itm)=>{return itm.id==itmTrack});
-          target.path.startX=e.pageX-shiftx+220;
-          target.path.startY=-1*(blockHeight-100)+e.pageY-18*indx-shifty+outTracks.length*(2*outTracks.length)-2;
-        })
+      if(tracksInfo) {
+       let right= tracksInfo.right
+       let top= tracksInfo.top+18.5*(outTracks.length)
+       if(outTracks){
+         outTracks.forEach((trackId,index)=>{
+           let target=this.tracksArray.find((itm)=>{return itm.id==trackId});
+           target.path.startX=right-2;
+           target.path.startY=top-18.5*(index+1)+4;
+         })
+       }
+
+       /*   let target=this.tracksArray.find((itm)=>{return itm.id==itmTrack});
+          target.path.startX=e.pageX-shiftx+218;
+          target.path.startY=-1*(blockHeight-100)+e.pageY-18.5*indx-shifty+outTracks.length*(2*outTracks.length+0.5)+75
+       */
       }
     },
   }

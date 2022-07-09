@@ -12,7 +12,7 @@
     <div class="block_content"></div>
     <div class="out_dots_list">
       <div v-for="n in node.children" :key="n" class="in_connect">
-         out <div class="dot"></div>
+         out <div ref="out_dot" class="dot"></div>
       </div>
     </div>
   </div>
@@ -60,13 +60,14 @@ export default {
     onMouseMove(event){
      this.moveNode(event.pageX, event.pageY);
      let track =this.node.trackId
-      let children= this.node.children;
+     let children= this.node.children;
       let tracksOut=[];
      for (let i =0;i<children;i++){
        tracksOut.push(track+'.'+i);
      }
     //  if(this.stableNode()){
-        this.$emit('moveTrack', event, track, this.shiftX - 20, this.shiftY - 76, tracksOut,this.$refs.body.offsetHeight);
+      const infoOutDot= children>0?this.$refs['out_dot'][0].getBoundingClientRect():null
+        this.$emit('moveTrack', event, track, this.shiftX - 25, this.shiftY, tracksOut,this.$refs.body.offsetHeight,infoOutDot);
     //  }
     },
     stableNode(){
@@ -123,7 +124,7 @@ export default {
     color:white
   }
   .block_body{
-    min-height: 100px;
+    min-height: 92px;
     display: flex;
    // background-color: white;
     .in_dots_list,.out_dots_list{
