@@ -32,8 +32,7 @@ export default {
     return{
       nodesArray:[],
       tracksArray:[],
-      limit:2,
-     // bgArray: {},
+      limit:6,
       test:[]
     }
   },
@@ -91,28 +90,20 @@ export default {
         }
       })
     },
-    moveTrack(e,track,shiftx,shifty,outTracks,blockHeight,tracksInfo){
+    moveTrack(e,track,shiftx,shifty,outTracks,blockHeight){
       let target=this.tracksArray.find((itm)=>{return itm.id==track});
       if(target) {
         target.path.endX = e.pageX - shiftx;
-        target.path.endY = e.pageY - shifty+75+0.5*(blockHeight-92)+2;
+        target.path.endY = e.pageY - shifty+75+0.5*(blockHeight-92);
       }
-      if(tracksInfo) {
-       let right= tracksInfo.right
-       let top= tracksInfo.top+18.5*(outTracks.length)
+        let gap=outTracks.length<5?((5-outTracks.length)/2):0
        if(outTracks){
          outTracks.forEach((trackId,index)=>{
            let target=this.tracksArray.find((itm)=>{return itm.id==trackId});
-           target.path.startX=right-2;
-           target.path.startY=top-18.5*(index+1)+4;
+           target.path.startX=e.pageX-shiftx+218;
+           target.path.startY= e.pageY - shifty+blockHeight+19-(index)*18.4-gap*18.4
          })
        }
-
-       /*   let target=this.tracksArray.find((itm)=>{return itm.id==itmTrack});
-          target.path.startX=e.pageX-shiftx+218;
-          target.path.startY=-1*(blockHeight-100)+e.pageY-18.5*indx-shifty+outTracks.length*(2*outTracks.length+0.5)+75
-       */
-      }
     },
   }
 }

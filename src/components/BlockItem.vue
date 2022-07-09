@@ -66,8 +66,7 @@ export default {
        tracksOut.push(track+'.'+i);
      }
     //  if(this.stableNode()){
-      const infoOutDot= children>0?this.$refs['out_dot'][0].getBoundingClientRect():null
-        this.$emit('moveTrack', event, track, this.shiftX - 25, this.shiftY, tracksOut,this.$refs.body.offsetHeight,infoOutDot);
+        this.$emit('moveTrack', event, track, this.shiftX - 25, this.shiftY, tracksOut,this.$refs.body.offsetHeight);
     //  }
     },
     stableNode(){
