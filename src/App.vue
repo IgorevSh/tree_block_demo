@@ -6,7 +6,7 @@
       <path v-for="track in tracksArray" :key="track.id"
             :d="`M ${track.path.startX},${track.path.startY}
              C ${track.path.endX} ${track.path.startY},${track.path.startX} ${track.path.endY},${track.path.endX} ${track.path.endY},`"
-            stroke="#7555f6" stroke-width="5" stroke-linecap="round" fill="none"></path>
+            stroke="#7555f6" stroke-width="3" stroke-linecap="round" fill="none"></path>
     </svg>
 
     <BlockItem
