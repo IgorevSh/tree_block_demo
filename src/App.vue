@@ -32,7 +32,7 @@ export default {
     return{
       nodesArray:[],
       tracksArray:[],
-      limit:7,
+      limit:10,
       test:[]
     }
   },
