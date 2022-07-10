@@ -33,13 +33,17 @@ export default {
       nodesArray:[],
       tracksArray:[],
       limit:10,
+      maxTop:0,
       test:[]
     }
   },
   mounted(){
     axios.get('https://functions.yandexcloud.net/d4e7argpi2fe7epuh65b').then(response=>{
       this.test=response.data
-      this.getNodes( this.test,1,100,200);
+      this.getNodes(this.test,1,100,0);
+      if(this.maxTop<0){
+        this.shiftGraph()
+      }
     })
   },
   methods:{
@@ -57,6 +61,9 @@ export default {
         if(index<(this.limit)) {
           let newId = id;
           let top = paddingY - (200) * (index) + 150  - lineShift
+          if(this.maxTop>top){
+            this.maxTop=top;
+          }
           this.nodesArray.push({
             title: itm.title,
             children: children,
@@ -81,7 +88,6 @@ export default {
               childShift=(children-5)*18.4/2
             }
 
-            console.log(gapShift)
             this.tracksArray.push({
               id: newId,
               path: {
@@ -96,6 +102,16 @@ export default {
             this.getNodes(itm.nodes, ++indexOfZ, paddingX + 300,top, children, newId,lineShift);
           }
         }
+      })
+    },
+    shiftGraph(){
+      let topShift=this.maxTop*(-1)
+      this.nodesArray.forEach((itm)=>{
+        itm.paddingTop+=topShift
+      })
+      this.tracksArray.forEach((itm)=>{
+        itm.path.startY+=topShift
+        itm.path.endY+=topShift
       })
     },
     moveTrack(e,track,shiftx,shifty,outTracks,blockHeight){
@@ -124,7 +140,7 @@ export default {
 }
 .cnv_tracks{
   position: absolute;
-  height: 100vh;
+  height: 2000px;
   width:100vw;
  /* border: 2px solid red;*/
   z-index: 0;
