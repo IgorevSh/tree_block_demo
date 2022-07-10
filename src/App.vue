@@ -32,7 +32,7 @@ export default {
     return{
       nodesArray:[],
       tracksArray:[],
-      limit:6,
+      limit:7,
       test:[]
     }
   },
@@ -43,8 +43,8 @@ export default {
     })
   },
   methods:{
-    getNodes(nodeList,indexOfZ,paddingX=0,paddingY=0,brothers=1,id='0'){
-      let lineShift=0;
+    getNodes(nodeList,indexOfZ,paddingX=0,paddingY=0,brothers=1,id='0',shift=0){
+      let lineShift=shift;
       let gapShift=0;
       nodeList.forEach((itm,index)=>{
         let children = itm.nodes?.length || 0
@@ -52,11 +52,11 @@ export default {
           children=this.limit
         }
         if(children>5){
-          lineShift += (children - 5) * 18.4
+          lineShift = (children - 5) * 18.4
         }
         if(index<(this.limit)) {
           let newId = id;
-          let top = paddingY - (200) * (index) + 150 * 0.5-lineShift
+          let top = paddingY - (200) * (index) + 150  - lineShift
           this.nodesArray.push({
             title: itm.title,
             children: children,
@@ -69,23 +69,31 @@ export default {
           })
           // this.bgArray[`bg-${indexOfZ>1?newId+'.'+index:'0'}`]={id:`bg-${indexOfZ>1?newId+'.'+index:'0'}`,top:top,left:paddingX};
           if (indexOfZ > 1) {
+            let childShift=0;
+            let brotherShift=0;
             newId = newId + '.' + index;
             if(brothers<=5){
               gapShift=(5-(brothers))*18.4/2
+            }else{
+              brotherShift=(brothers-5)*18.4
             }
-            //console.log(lineShift,newId,children)
+            if(children>5){
+              childShift=(children-5)*18.4/2
+            }
+
+            console.log(gapShift)
             this.tracksArray.push({
               id: newId,
               path: {
                 startX: paddingX - 60,
-                startY:paddingY+20+(92)-index*18.4-gapShift,//-1.05*(shift)+paddingY-18*index+(brothers + 1)*(2*(brothers + 1)+0.5);
+                startY:paddingY+20+92+brotherShift-gapShift-18.4*index,//-1.05*(shift)+paddingY-18*index+(brothers + 1)*(2*(brothers + 1)+0.5);
                 endX: paddingX + 25,
-                endY:top+75+(lineShift*0.5),
+                endY:top+28+46+childShift,
               },
             })
           }
           if (itm.nodes) {
-            this.getNodes(itm.nodes, ++indexOfZ, paddingX + 300, top+lineShift, children, newId);
+            this.getNodes(itm.nodes, ++indexOfZ, paddingX + 300,top, children, newId,lineShift);
           }
         }
       })
