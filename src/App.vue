@@ -2,7 +2,7 @@
   <div>
     <svg
         class="cnv_tracks"
-    ref="canvas" >
+    ref="canvas" :style="{height:minHeight+'px',width:minWidth+'px'}">
       <path v-for="track in tracksArray" :key="track.id"
             :d="`M ${track.path.startX},${track.path.startY}
              C ${track.path.endX} ${track.path.startY},${track.path.startX} ${track.path.endY},${track.path.endX} ${track.path.endY},`"
@@ -34,11 +34,15 @@ export default {
       tracksArray:[],
       limit:10,
       maxTop:0,
+      minWidth:0,
+      minHeight:0,
       test:[]
     }
   },
   mounted(){
     axios.get('https://functions.yandexcloud.net/d4e7argpi2fe7epuh65b').then(response=>{
+      this.minHeight=window.innerHeight
+      this.minWidth=window.innerWidth
       this.test=response.data
       this.getNodes(this.test,1,100,0);
       if(this.maxTop<0){
@@ -63,6 +67,12 @@ export default {
           let top = paddingY - (200) * (index) + 150  - lineShift
           if(this.maxTop>top){
             this.maxTop=top;
+          }
+          if(paddingX>this.minWidth){
+            this.minWidth=paddingX
+          }
+          if(this.minHeight<top){
+            this.minHeight=top+92
           }
           this.nodesArray.push({
             title: itm.title,
@@ -116,6 +126,12 @@ export default {
     },
     moveTrack(e,track,shiftx,shifty,outTracks,blockHeight){
       let target=this.tracksArray.find((itm)=>{return itm.id==track});
+      if(e.pageY - shifty+blockHeight>this.minHeight){
+        this.minHeight=e.pageY - shifty+blockHeight
+      }
+      if(e.pageX - shiftx+25>this.minWidth){
+        this.minWidth=e.pageX - shiftx+25
+      }
       if(target) {
         target.path.endX = e.pageX - shiftx;
         target.path.endY = e.pageY - shifty+75+0.5*(blockHeight-92);
@@ -140,8 +156,6 @@ export default {
 }
 .cnv_tracks{
   position: absolute;
-  height: 2000px;
-  width:100vw;
  /* border: 2px solid red;*/
   z-index: 0;
 }
