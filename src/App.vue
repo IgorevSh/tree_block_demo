@@ -40,8 +40,8 @@ export default {
     }
   },
   mounted(){
-    axios.get('https://functions.yandexcloud.net/d4e7argpi2fe7epuh65b').then(response=>{
-      this.minHeight=window.innerHeight
+    axios.get('https://functions.yandexcloud.net/d4e7argpi2fe7epuh65b?').then(response=>{
+      this.minHeight=0
       this.minWidth=window.innerWidth
       this.test=response.data
       this.getNodes(this.test,1,100,0);
@@ -54,7 +54,9 @@ export default {
     getNodes(nodeList,indexOfZ,paddingX=0,paddingY=0,brothers=1,id='0',shift=0){
       let lineShift=shift;
       let gapShift=0;
+      let brotherChild=1;
       nodeList.forEach((itm,index)=>{
+         console.log(brotherChild)
         let children = itm.nodes?.length || 0
         if(children>this.limit){
           children=this.limit
@@ -64,7 +66,8 @@ export default {
         }
         if(index<(this.limit)) {
           let newId = id;
-          let top = paddingY - (200) * (index) + 150  - lineShift
+          console.log(itm.title,brotherChild)
+          let top = paddingY - (130) * (index) - lineShift+(brothers*92-(brotherChild-1)*130);
           if(this.maxTop>top){
             this.maxTop=top;
           }
@@ -111,6 +114,7 @@ export default {
           if (itm.nodes) {
             this.getNodes(itm.nodes, ++indexOfZ, paddingX + 300,top, children, newId,lineShift);
           }
+          brotherChild+=children===0?1:children;
         }
       })
     },
@@ -123,6 +127,7 @@ export default {
         itm.path.startY+=topShift
         itm.path.endY+=topShift
       })
+      this.minHeight+=topShift+92
     },
     moveTrack(e,track,shiftx,shifty,outTracks,blockHeight){
       let target=this.tracksArray.find((itm)=>{return itm.id==track});
